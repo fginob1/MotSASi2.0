@@ -1,1 +1,2 @@
+GnomAD/GnomAD_missense.csv filter=lfs diff=lfs merge=lfs -text
 GnomAD/* text !filter !merge !diff
