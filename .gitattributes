@@ -1,3 +1,6 @@
 GnomAD/GnomAD_missense.csv.gz filter=lfs diff=lfs merge=lfs -text
 GO/go.obo filter=lfs diff=lfs merge=lfs -text
+<<<<<<< HEAD
 UniProt/uniprot_sprot_h.xml.gz filter=lfs diff=lfs merge=lfs -text
+=======
+>>>>>>> 41a080b15b01c6efb95c06423c6a7902a255f52e
