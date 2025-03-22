@@ -1,2 +1,1 @@
-*.gz filter=lfs diff=lfs merge=lfs -text
-GnomAD/* text !filter !merge !diff
+GnomAD/GnomAD_missense.csv.gz filter=lfs diff=lfs merge=lfs -text
