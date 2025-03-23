@@ -145,12 +145,12 @@ if __name__ == "__main__":
     parser.add_argument("Motif_name", action="store", help = "Name of the motif, e.g. DOC_MAPK_JIP1_4")
     parser.add_argument("Motif_re", action="store", help = "Motif regular expression, e.g. [RK]P[^P][^P]L.[LIVMF]")
     parser.add_argument("Motif_label", action="store", help = "Motif regular expression for plotting, e.g. RK.P.^P.^P.L.x.LIVMF")
-    parser.add_argument("-fasta", "--sp_h_fasta", action="store", help = "file with fasta entries for SwissProt", default="/grupos/Marce/estructural/databases/UniProt/uniprot_sprot_h.fasta")
-    parser.add_argument("-xml", "--sp_h_xml", action="store", help = "file with xml entries for SwissProt", default="/grupos/Marce/estructural/databases/UniProt/uniprot_sprot_h.xml")
-    parser.add_argument("-list", "--sp_h_list", action="store", help = "file with all UniProtIDs in SwissProt", default="/grupos/Marce/estructural/databases/UniProt/uniprot_sprot_h.list")
-    parser.add_argument("-cv_miss", "--clinvar_missense", action="store", help = "csv file with all clinvar missense variants", default="/grupos/Marce/estructural/databases/ClinVar/ClinVar_missense_all_filtered.csv")
-    parser.add_argument("-tmp", "--tmp_path", action="store", help = "temporary folder", default="/grupos/Marce/estructural/motsasi/tmp/")
-    parser.add_argument("-cwd", "--cwd", action="store", help = "current working directory path", default="/grupos/Marce/estructural/motsasi/")
+    parser.add_argument("-fasta", "--sp_h_fasta", action="store", help = "file with fasta entries for SwissProt", default="./UniProt/uniprot_sprot_h.fasta")
+    parser.add_argument("-xml", "--sp_h_xml", action="store", help = "file with xml entries for SwissProt", default="./UniProt/uniprot_sprot_h.xml")
+    parser.add_argument("-list", "--sp_h_list", action="store", help = "file with all UniProtIDs in SwissProt", default="./UniProt/uniprot_sprot_h.list")
+    parser.add_argument("-cv_miss", "--clinvar_missense", action="store", help = "csv file with all clinvar missense variants", default="./ClinVar/ClinVar_missense_all_filtered.csv")
+    parser.add_argument("-tmp", "--tmp_path", action="store", help = "temporary folder", default="./tmp/")
+    parser.add_argument("-cwd", "--cwd", action="store", help = "current working directory path", default="./")
 
     args = parser.parse_args()
     
@@ -160,7 +160,7 @@ if __name__ == "__main__":
     if not os.path.exists(f"{args.tmp_path}"):
         os.system(f"mkdir {args.tmp_path}")
 
-    from MotifSearcher_cluster import HumanProteomeSearch
+    from MotifSearcher import HumanProteomeSearch
     screening_proteoma = HumanProteomeSearch(args.Motif_name, args.Motif_re, args.sp_h_fasta, args.sp_h_xml, args.sp_h_list)
 
     ClinVarMotif(screening_proteoma, args.Motif_name, args.clinvar_missense)
