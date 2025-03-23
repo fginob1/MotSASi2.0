@@ -86,14 +86,14 @@ if __name__ == "__main__":
     parser.add_argument("-cwd", "--cwd", action="store", help = "current working directory path", default="/grupos/Marce/estructural/motsasi/")
 
     args = parser.parse_args()
-    
+
     if not os.path.exists(f"{args.cwd}Motifs/{args.Motif_name}"):
         os.system(f"mkdir {args.cwd}Motifs/{args.Motif_name}")
 
     if not os.path.exists(f"{args.tmp_path}"):
         os.system(f"mkdir {args.tmp_path}")
 
-    from MotifSearcher_cluster import HumanProteomeSearch
+    from MotifSearcher import HumanProteomeSearch
     screening_proteoma = HumanProteomeSearch(args.Motif_name, args.Motif_re, args.sp_h_fasta, args.sp_h_xml, args.sp_h_list)
 
     positive_ctrl(screening_proteoma, args.Motif_name, args.pdb_structures, args.elm_instances)
