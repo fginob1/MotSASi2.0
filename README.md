@@ -1,158 +1,187 @@
-# **MotSASi 2.0**  
+# MotSASi 2.0
 
-Este repositorio contiene todos los archivos de código necesarios para ejecutar el pipeline **MotSASi 2.0**.  
+This repository contains all the necessary code files to run the MotSASi 2.0 pipeline.
 
-## **Descripción**  
+MotSASi 2.0 is a strategy designed to enhance the prediction of functional Short Linear Motifs (SLiMs) by integrating genomic variant information and structural data from both PDB-deposited crystallographic structures and AlphaFold2 models. Additionally, it enables the generation of Single Amino Acid Substitution (SAS) matrices, providing predictions for all missense variants occurring within SLiMs.
 
-**MotSASi 2.0** es una estrategia diseñada para mejorar la predicción de **Short Linear Motifs (SLiMs)** funcionales mediante la integración de información sobre variantes genómicas y datos estructurales. Utiliza tanto estructuras cristalográficas depositadas en **PDB** como modelos de **AlphaFold2**.  
-
-Además, permite la generación de **matrices de Sustitución de Un Solo Aminoácido (SAS)**, proporcionando predicciones para todas las variantes missense que ocurren dentro de SLiMs.  
-
-Si esta herramienta te resulta útil, te pedimos que cites nuestro trabajo.  
+If you find this tool useful, we kindly ask you to cite our work.
 
 ---
 
-## **Requisitos e Instrucciones de Uso**  
+## Requirements and Usage Instructions
 
-Para asegurar compatibilidad y reproducibilidad, recomendamos ejecutar los scripts dentro de un entorno **Anaconda**.  
-
-### **1. Instalación de Anaconda y Creación del Entorno**  
+For better compatibility and reproducibility, we recommend running the scripts within an Anaconda environment.
 
 ```bash
-wget https://repo.anaconda.com/archive/Anaconda3-2024.02-0-Linux-x86_64.sh  
-bash Anaconda3-2024.02-0-Linux-x86_64.sh  
-conda create --name motsasi python=3.10  
-conda activate motsasi  
+wget https://repo.anaconda.com/archive/Anaconda3-2024.02-0-Linux-x86_64.sh
+bash Anaconda3-2024.02-0-Linux-x86_64.sh
+conda create --name motsasi python=3.10
+conda activate motsasi
 ```
 
-Instalar **Biopython**:  
+### Required Dependencies
+
+Biopython is required:
 
 ```bash
-conda install -c conda-forge biopython  
+conda install -c conda-forge biopython
 ```
 
-### **2. Clonar el Repositorio**  
+### Clone the Repository
 
 ```bash
-git clone https://github.com/fginob1/MotSASi2.0.git  
-cd MotSASi2.0  
-git lfs pull  
+git clone https://github.com/fginob1/MotSASi2.0.git
+cd MotSASi2.0
+git lfs pull
 ```
 
-### **3. Crear Directorios Necesarios**  
+### Create Required Directories
 
 ```bash
-mkdir tmp Motifs PDB AF_human_proteome repaired_pdbs secondary_structures scratch  
+mkdir tmp Motifs PDB AF_human_proteome repaired_pdbs secondary_structures scratch
 ```
 
----
+### Install Required Software
 
-## **Instalación de Dependencias**  
+#### FoldX
 
-### **1. FoldX**  
+Go to [FoldX Website](https://foldxsuite.crg.eu/academic-license-info) and request an academic license to run FoldX locally. Important files that must be present in the main directory `MotSASi2.0` are the FoldX executable and the "molecules" folder.
 
-Se requiere una licencia académica para ejecutar **FoldX** localmente.  
-
-- Solicitar la licencia en: [https://foldxsuite.crg.eu/academic-license-info](https://foldxsuite.crg.eu/academic-license-info).  
-- Colocar el **ejecutable** de FoldX y la carpeta **molecules** dentro del directorio principal `MotSASi2.0`.  
-
-### **2. FreeSASA**  
-
-Instalar con `pip`:  
+#### FreeSASA
 
 ```bash
-pip install freesasa  
+pip install freesasa
 ```
 
-### **3. SCRATCH**  
+#### SCRATCH
 
 ```bash
-cd scratch  
-wget http://download.igb.uci.edu/SCRATCH-1D_1.3.tar.gz  
-tar -zxf SCRATCH-1D_1.3.tar.gz  
-cd SCRATCH-1D_1.3  
-perl install.pl  
-cd ../..  
+cd scratch
+wget http://download.igb.uci.edu/SCRATCH-1D_1.3.tar.gz
+tar -zxf SCRATCH-1D_1.3.tar.gz
+cd SCRATCH-1D_1.3
+perl install.pl
+cd ../..
 ```
 
----
+### Required Datasets
 
-## **Descarga de Bases de Datos**  
+#### Zipped PDB Database
 
-### **1. Base de datos PDB (estructuras cristalográficas)**  
-
-Si ya tienes la base de datos PDB descargada, solo indica la ruta correcta.  
+**CAUTION**: If you already have the zipped PDB database (`pdbxxxx.ent.gz` files) on your computer, just specify the correct path. The same applies to the Human proteome AlphaFold database and the SwissProt/Trembl files from UniProt.
 
 ```bash
-cd PDB  
-mkdir zipped unzipped  
-rsync -rlpt -v -z --delete --port=33444
-rsync.rcsb.org::ftp_data/structures/all/pdb/ ./zipped  
-cd ..  
+cd PDB
+mkdir zipped unzipped
+rsync -rlpt -v -z --delete --port=33444 \
+rsync.rcsb.org::ftp_data/structures/all/pdb/ ./zipped
+cd ..
 ```
 
-### **2. Base de datos AlphaFold para el proteoma humano**  
+#### Human Proteome AlphaFold Database
 
 ```bash
-cd AF_human_proteome  
-wget -c https://ftp.ebi.ac.uk/pub/databases/alphafold/latest/UP000005640_9606_HUMAN_v4.tar  
-tar -xvf UP000005640_9606_HUMAN_v4.tar  
-rm UP000005640_9606_HUMAN_v4.tar  
-cd ..  
+cd AF_human_proteome
+wget -c https://ftp.ebi.ac.uk/pub/databases/alphafold/latest/UP000005640_9606_HUMAN_v4.tar
+tar -xvf UP000005640_9606_HUMAN_v4.tar
+rm UP000005640_9606_HUMAN_v4.tar
+cd ..
 ```
 
-### **3. Base de datos UniProt (SwissProt & Trembl)**  
+#### SwissProt and Trembl FASTA Files from UniProt
 
 ```bash
-cd UniProt  
-wget https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.fasta.gz  
-zcat uniprot_sprot.fasta.gz | bgzip > uniprot_sprot.fasta.bgz  
-
-wget https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_trembl.fasta.gz  
-zcat uniprot_trembl.fasta.gz | bgzip > uniprot_trembl.fasta.bgz  
-cd ..  
+cd UniProt
+wget -O "uniprot_sprot.fasta.gz" https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.fasta.gz
+zcat uniprot_sprot.fasta.gz | bgzip > uniprot_sprot.fasta.bgz
+wget -O "uniprot_trembl.fasta.gz" https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_trembl.fasta.gz
+zcat uniprot_trembl.fasta.gz | bgzip > uniprot_trembl.fasta.bgz
+cd ..
 ```
 
 ---
 
-## **Ejecutando MotSASi 2.0**  
+## Running MotSASi 2.0
 
-### **MotSASi_2_cluster.py: Integración de Información Estructural y de Variantes para el Análisis de SLiMs**  
+### MotSASi_2_cluster.py: Integrating Structural & Variant Information for SLiM Analysis
 
-El script **MotSASi_2_cluster.py** realiza las siguientes tareas:  
+The script `MotSASi_2_cluster.py` performs the following tasks:
 
-- **Identificación de motivos:** busca el motivo de interés dentro del proteoma humano.  
-- **Recolección de variantes:** obtiene variantes benignas y patogénicas de **ClinVar** y **gnomAD**.  
-- **Cálculo de la Matriz de Sustitución:**  
-  - Si hay estructuras PDB disponibles, se genera con **FoldX**.  
-  - En caso contrario, se usa una predicción de **AlphaFold2**.  
-- **Generación de la Matriz ClinSig y de Frecuencia Alélica:** basada en instancias de motivos de **ELM** (control positivo).  
-- **Cálculo de conservación** para el control positivo.  
-- **Cálculo de probabilidad de estructura secundaria** usando **SCRATCH**.  
-- **Cálculo de Solvent Accessible Surface Area (SASA)**.  
-- **Obtención de términos GO** desde **UniProt**.  
+- **Motif Identification**: Searches for the motif of interest within the human proteome.
+- **Variant Collection**: Retrieves benign and pathogenic variants from ClinVar and gnomAD.
+- **Substitution Matrix Calculation**:
+  - If PDB structures are available, the matrix is generated using FoldX.
+  - If not, an AlphaFold2 model prediction is used.
+- **ClinSig Matrix and Allele Frequency Matrix Generation**: Based on ELM motif instances (used as a positive control).
+- **Conservation Score Calculation** for the positive control.
+- **Secondary Structure Probability Calculation** using SCRATCH for the positive control.
+- **Solvent Accessible Surface Area (SASA) Calculation** for the positive control.
+- **GO Terms Collection** from UniProt for the positive control.
 
-### **Ejemplo de Ejecución**  
+### Execution
 
-```bash
-python3 MotSASi_2_cluster.py [MOTIF] [DOT-SEPARATED MOTIF] [ELM MOTIF NAME]  
-```
-
-#### **Ejemplo concreto:**  
+Run the following command:
 
 ```bash
-python3 MotSASi_2_cluster.py [RK]P[^P][^P]L.[LIVMF] RK.P.^P.^P.L.x.LIVMF DOC_MAPK_JIP1_4  
+python3 MotSASi_2_cluster.py [MOTIF] [DOT-SEPARATED MOTIF] [ELM MOTIF NAME]
 ```
 
-### **Incorporando Modelos de AlphaFold2 en el Pipeline**  
-
-Los modelos AlphaFold deben ubicarse en una carpeta **Seed** dentro del directorio correspondiente al motivo en la carpeta **Motifs**.  
-
-Ejemplo de ejecución:
+**Example Command:**
 
 ```bash
-python3 alphafold_parameters.py DOC_MAPK_JIP1_4  
+python3 MotSASi_2_cluster.py "[RK]P[^P][^P]L.[LIVMF]" "RK.P.^P.^P.L.x.LIVMF" "DOC_MAPK_JIP1_4"
 ```
 
-Este paso es necesario para calcular métricas de **Energía de Interacción** y **Confianza**, y seleccionar los modelos óptimos.  
+Where:
+- `[MOTIF]` → The motif in regular expression format.
+- `[DOT-SEPARATED MOTIF]` → The motif with elements separated by dots.
+- `[ELM MOTIF NAME]` → The name of the motif in the ELM database.
+
+### Output
+
+Once executed, the script generates a motif-specific folder containing all output files. This folder is stored in the parent directory of the folder where the script is run.
+
+---
+
+## Introducing AlphaFold2 Models into the Pipeline
+
+When a crystallographic structure is not associated with a given motif class, AlphaFold-generated models can be incorporated into the pipeline. The user can generate these models via the [AlphaFold Server](https://alphafoldserver.com/) or by installing AlphaFold locally. According to the MotSASi 2.0 methodology, users should run AlphaFold using the sequence of a given motif along with the sequence of its binding domain.
+
+### Adding AlphaFold Models
+
+Once the user has the `.pdb` files with predictions, they should be placed in a folder named `Seed` inside the corresponding motif folder within `Motifs`.
+
+For example, for the **DOC_MAPK_JIP1_4** motif class:
+
+```bash
+./Motifs/DOC_MAPK_JIP1_4/Seed
+```
+
+Additionally, a TSV file must be prepared with the following column names:
+
+```
+Motif	rank	model
+```
+
+This TSV file should be placed inside the motif folder:
+
+```bash
+./Motifs/DOC_MAPK_JIP1_4/
+```
+
+### Running AlphaFold Parameter Extraction
+
+From the main directory (`./`), execute:
+
+```bash
+python3 alphafold_parameters.py [ELM MOTIF NAME]
+```
+
+**Example Command:**
+
+```bash
+python3 alphafold_parameters.py DOC_MAPK_JIP1_4
+```
+
+This script prepares the TSV file to integrate into the pipeline by adding **Interaction Energy** and **Confidence Metrics** to select the optimal models. An example TSV file for the **DOC_MAPK_JIP1_4** motif class is provided in the `Motifs` folder.
 
