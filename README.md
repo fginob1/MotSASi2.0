@@ -98,7 +98,11 @@ wget -O "uniprot_trembl.fasta.gz" https://ftp.uniprot.org/pub/databases/uniprot/
 zcat uniprot_trembl.fasta.gz | bgzip > uniprot_trembl.fasta.bgz
 cd ..
 ```
+### Decompressing Required Files  
+To extract the necessary `.gz` files, run the following command:  
 
+```bash
+gunzip ./ClinVar/ClinVar_missense_all_filtered.csv.gz ./GnomAD/GnomAD_missense.csv.gz ./Predictions/motsasi_variant_predictions.csv.gz ./UniProt/uniprot_sprot_h.xml.gz
 ---
 
 ## Running MotSASi 2.0
