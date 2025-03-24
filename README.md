@@ -123,13 +123,13 @@ The script `MotSASi_2_cluster.py` performs the following tasks:
 Run the following command:
 
 ```bash
-python3 MotSASi_2_cluster.py [MOTIF] [DOT-SEPARATED MOTIF] [ELM MOTIF NAME]
+python3 MotSASi_2.py [MOTIF] [DOT-SEPARATED MOTIF] [ELM MOTIF NAME]
 ```
 
 **Example Command:**
 
 ```bash
-python3 MotSASi_2_cluster.py "[RK]P[^P][^P]L.[LIVMF]" "RK.P.^P.^P.L.x.LIVMF" "DOC_MAPK_JIP1_4"
+python3 MotSASi_2.py "[RK]P[^P][^P]L.[LIVMF]" "RK.P.^P.^P.L.x.LIVMF" "DOC_MAPK_JIP1_4"
 ```
 
 Where:
@@ -183,5 +183,4 @@ python3 alphafold_parameters.py [ELM MOTIF NAME]
 python3 alphafold_parameters.py DOC_MAPK_JIP1_4
 ```
 
-This script prepares the TSV file to integrate into the pipeline by adding **Interaction Energy** and **Confidence Metrics** to select the optimal models. An example TSV file for the **DOC_MAPK_JIP1_4** motif class is provided in the `Motifs` folder.
-
+This step is necessary to prepare the TSV file with Interaction Energy and Confidence metrics, which will be used to select the optimal models. An example file for the DOC_MAPK_JIP1_4 motif class is provided in the Motifs folder. After this step, you can run the complete pipeline, which will incorporate the AlphaFold2 models to build the FoldX matrices.
