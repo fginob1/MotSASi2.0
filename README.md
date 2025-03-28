@@ -153,19 +153,10 @@ When no crystallographic structure is available for a motif class, AlphaFold-gen
 
 ### **Adding AlphaFold Models**
 
-1. Place `.pdb` prediction files inside a `Seed` folder within the corresponding motif directory:
+Place `.pdb` prediction files inside a `Seed` folder within the corresponding motif directory:
    ```bash
    ./Motifs/DOC_MAPK_JIP1_4/Seed
    ```
-2. Prepare a TSV file with the following structure:
-   ```
-   Motif	rank	model
-   ```
-   Save this file inside the motif folder:
-   ```bash
-   ./Motifs/DOC_MAPK_JIP1_4/
-   ```
-
 ### **Running AlphaFold Parameter Extraction**
 
 Execute the following command:
@@ -177,7 +168,7 @@ python3 alphafold_parameters.py [ELM MOTIF NAME]
 **Example:**
 
 ```bash
-python3 alphafold_parameters.py DOC_MAPK_JIP1_4
+python3 alphafold_parameters.py CLV_C14_Caspase3-7
 ```
 
-This prepares the TSV file with Interaction Energy and Confidence metrics, used for selecting optimal models. Once completed, you can run the pipeline with AlphaFold2 models integrated into the FoldX matrices.
+This generates a TSV file named 'interface_res_stat_total.tsv' containing Interaction Energy and Confidence metrics used to select optimal models. Once completed, you can run the pipeline with AlphaFold2 models integrated into the FoldX matrices.
