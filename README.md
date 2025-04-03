@@ -55,6 +55,13 @@ Go to [FoldX Website](https://foldxsuite.crg.eu/academic-license-info) and reque
 pip install freesasa
 ```
 
+#### **ssbio**
+
+```bash
+pip install ssbio
+```
+
+
 #### **SCRATCH**
 
 ```bash
@@ -64,6 +71,16 @@ tar -zxf SCRATCH-1D_1.3.tar.gz
 cd SCRATCH-1D_1.3
 perl install.pl
 cd ../..
+```
+
+There is an issue with Biopython in order to run ssbio to parse scratch output. This is represented by an impossibility to import IUPAC from Bio.Alphabet. To resolve this issue, we simply should remove the imports and usages of IUPAC in the utils.py file in the ssbio folder. We provide three Linux terminal lines in order to change this file with no functional alterations. The user must specify the specific path to the folder (if working with an environment, the folder should probably be there).
+
+```bash
+sed -i '/from Bio.Alphabet import IUPAC/d' ~/path_to_the_ssbbio_folder/ssbio/protein/sequence/utils/utils.py
+
+sed -i 's/def cast_to_seq(obj, alphabet=IUPAC.extended_protein):/def cast_to_seq(obj):/' ~/path_to_the_ssbbio_folder/ssbio/protein/sequence/utils/utils.py
+
+sed -i 's/def cast_to_seq_record(obj, alphabet=IUPAC.extended_protein,/def cast_to_seq_record(obj,/' ~/Documents/Bitgenia/Curso_bioinformatica_avanzada/envs/pytorch_env/lib/python3.9/site-packages/ssbio/protein/sequence/utils/utils.py
 ```
 
 ---
