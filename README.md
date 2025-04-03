@@ -80,7 +80,7 @@ sed -i '/from Bio.Alphabet import IUPAC/d' ~/path_to_the_ssbbio_folder/ssbio/pro
 
 sed -i 's/def cast_to_seq(obj, alphabet=IUPAC.extended_protein):/def cast_to_seq(obj):/' ~/path_to_the_ssbbio_folder/ssbio/protein/sequence/utils/utils.py
 
-sed -i 's/def cast_to_seq_record(obj, alphabet=IUPAC.extended_protein,/def cast_to_seq_record(obj,/' ~/Documents/Bitgenia/Curso_bioinformatica_avanzada/envs/pytorch_env/lib/python3.9/site-packages/ssbio/protein/sequence/utils/utils.py
+sed -i 's/def cast_to_seq_record(obj, alphabet=IUPAC.extended_protein,/def cast_to_seq_record(obj,/' ~/path_to_the_ssbbio_folder/ssbio/protein/sequence/utils/utils.py
 ```
 
 ---
