@@ -153,13 +153,13 @@ This script performs the following tasks:
 ### **Execution**
 
 ```bash
-python3 MotSASi_2.py [MOTIF] [DOT-SEPARATED MOTIF] [ELM MOTIF NAME]
+python3 MotSASi_2.py [ELM MOTIF NAME] [MOTIF] [DOT-SEPARATED MOTIF]
 ```
 
 **Example:**
 
 ```bash
-python3 MotSASi_2.py "[RK]P[^P][^P]L.[LIVMF]" "RK.P.^P.^P.L.x.LIVMF" "DOC_MAPK_JIP1_4"
+python3 MotSASi_2.py DOC_MAPK_JIP1_4 [RK]P[^P][^P]L.[LIVMF] RK.P.^P.^P.L.x.LIVMF
 ```
 
 ---
