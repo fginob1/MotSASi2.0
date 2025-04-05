@@ -10,7 +10,6 @@ from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 from Bio.PDB import PDBParser
-from Bio.PDB.Polypeptide import three_to_one
 import numpy as np
 import urllib
 import seaborn as sns

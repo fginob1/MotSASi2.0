@@ -14,7 +14,7 @@ from Bio.PDB import PDBParser
 import re
 import argparse
 import gzip
-from Bio.PDB.Polypeptide import three_to_one
+from Bio.SeqUtils import seq1
 from tqdm import tqdm
 import statistics
 import statsmodels.formula.api as smf
@@ -118,8 +118,8 @@ def pdb_foldx_parameters(match, motif_re, motif_name, pdb_db_path):
                             residues_pdb.append("M")
                             residues_seq.append("M")
                         else:
-                            residues_pdb.append(three_to_one(residue.get_resname()))
-                            residues_seq.append(three_to_one(residue.get_resname()))
+                            residues_pdb.append(seq1(residue.get_resname()))
+                            residues_seq.append(seq1(residue.get_resname()))
                         if len(residues_seq) == 1:
                             peptide_start = residue.id[1]
                             previous_aa = residue.id[1]
@@ -209,8 +209,8 @@ def alphafold_foldx_parameters(motif_re, motif_name, row, cwd_path):
                         residues_pdb.append("M")
                         residues_seq.append("M")
                     else:
-                        residues_pdb.append(three_to_one(residue.get_resname()))
-                        residues_seq.append(three_to_one(residue.get_resname()))
+                        residues_pdb.append(seq1(residue.get_resname()))
+                        residues_seq.append(seq1(residue.get_resname()))
                     if len(residues_seq) == 1:
                         peptide_start = residue.id[1]
                         previous_aa = residue.id[1]

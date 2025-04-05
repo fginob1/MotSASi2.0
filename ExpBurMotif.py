@@ -20,7 +20,7 @@ from Bio.PDB import PDBIO, PDBParser
 import gzip
 from Bio.PDB.PDBIO import Select
 import freesasa
-from Bio.PDB.Polypeptide import three_to_one
+from Bio.SeqUtils import seq1
 from Bio import Align
 from Bio.Align import substitution_matrices
 
@@ -98,7 +98,7 @@ def expent_x_residuo(UniProtID, start, sp_h_xml_path, sasa_thr_path, alphafold_h
             if chain.id == chain_:
                 for residue in chain:
                     if residue.get_id()[0] == " ":
-                        residues.append(three_to_one(residue.resname))
+                        residues.append(seq1(residue.resname))
 
     # voy a meter todos los polipeptidos de esa cadena del cristal en una unica secuencia que despues
     # el alineador me los "mapea" contra el fasta
