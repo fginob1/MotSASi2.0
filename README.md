@@ -170,9 +170,9 @@ When no crystallographic structure is available for a motif class, AlphaFold-gen
 
 ### **Adding AlphaFold Models**
 
-Place `.pdb` prediction files inside a `Seed` folder within the corresponding motif directory:
+Place `.pdb` prediction files inside a `Seed` folder within the corresponding motif directory. An example is given for the CLV_C14_Caspase3-7 motif class:
    ```bash
-   ./Motifs/DOC_MAPK_JIP1_4/Seed
+   ./Motifs/CLV_C14_Caspase3-7/Seed
    ```
 ### **Running AlphaFold Parameter Extraction**
 
