@@ -40,7 +40,7 @@ git lfs pull
 ### **Create Required Directories**
 
 ```bash
-mkdir tmp Motifs PDB AF_human_proteome repaired_pdbs secondary_structures scratch
+mkdir tmp PDB AF_human_proteome repaired_pdbs secondary_structures scratch
 ```
 
 ### **Install Required Software**
@@ -92,11 +92,10 @@ sed -i 's/def cast_to_seq_record(obj, alphabet=IUPAC.extended_protein,/def cast_
 **CAUTION**: If you already have the zipped PDB database (`pdbxxxx.ent.gz` files) on your computer, just specify the correct path. The same applies to the Human proteome AlphaFold database and the SwissProt/Trembl files from UniProt.
 
 ```bash
-cd PDB
-mkdir zipped unzipped
-rsync -rlpt -v -z --delete --port=33444 
-rsync.rcsb.org::ftp_data/structures/all/pdb/ ./zipped
-cd ..
+mkdir -p PDB/zipped PDB/unzipped PDB/divided
+rsync -avP rsync.wwpdb.org::ftp/data/structures/divided/pdb/ "./PDB/divided/"
+find "./PDB/divided/" -type f -name "*.ent.gz" -exec mv -n {} "./PDB/zipped/" \;
+rm -r ./PDB/divided
 ```
 
 ### **Human Proteome AlphaFold Database**
