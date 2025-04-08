@@ -37,7 +37,6 @@ from FoldXMotif import foldx_process
 from ConservationScore import ConservationScore
 from SecStrMotif import scratch
 from GOMotif import Motif_GO
-from MotifRelativePosition import RelativePosition
 from ExpBurMotif import sasa
 from multiprocessing import Pool
 from itertools import repeat
@@ -836,18 +835,6 @@ def ExpBurCutOff(true_positives, motif_name, motif_label, xml_db_path, alphafold
     
     return ExpBur_dict_cutoff
 
-def RelPosCutOff(true_positives, motif_name, cwd_path, screen):
-    """
-    This function takes the true positives as input and outputs the minimum and maximum location seen
-    for the motif in true positives
-    """
-    # dataframe with true positives in rows and absolut and relative positions in columns
-    RelPos_df = RelativePosition(true_positives, motif_name, cwd_path, screen = screen)
-    MinPos_cutoff = RelPos_df.Rel_Pos.min()
-    MaxPos_cutoff = RelPos_df.Rel_Pos.max()
-
-    return MinPos_cutoff, MaxPos_cutoff
-
 def GOTermsCutOff(true_positives, motif_name, xml_db_path, GO_db_path, cwd_path, screen):
     """
     This function takes the true positives as input and outputs a list with a certain amount of representative GO terms
@@ -1105,7 +1092,6 @@ def iteration_process(motif_name, motif_re, motif_label, clinvar_db_path, gnomad
     # setting our conservation, secondary structure, relative position and GO terms cut offs
     Conservation_cutoff = ConsCutOff(true_positives, motif_label, motif_name, uniref90_db_path, proteoma_list_path, sp_list_path, sp_fasta_path, trembl_fasta_path, cwd_path, tmp_path, screen)
     SecStr_dict_cutoff = SecStrCutOff(true_positives, motif_name, motif_label, xml_db_path, sec_str_path, alphafold_human_path, scratch_path, cwd_path, tmp_path, screen)
-    MinPos_cutoff, MaxPos_cutoff = RelPosCutOff(true_positives, motif_name, cwd_path, screen)
     top_GOTerms = GOTermsCutOff(true_positives, motif_name, xml_db_path, GO_db_path, cwd_path, screen)
     ExpBur_dict_cutoff = ExpBurCutOff(true_positives, motif_name, motif_label, xml_db_path, alphafold_human_path, sasa_thr_path, cwd_path, tmp_path, screen)
     print(ExpBur_dict_cutoff)
