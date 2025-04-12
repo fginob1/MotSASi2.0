@@ -26,7 +26,7 @@ conda activate motsasi
 Biopython is required:
 
 ```bash
-conda install -c conda-forge biopython
+conda install -c conda-forge biopython mafft
 ```
 
 ### **Clone the Repository**
