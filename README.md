@@ -130,8 +130,7 @@ To extract the necessary `.gz` files, run the following command:
 ```bash
 gunzip ./ClinVar/ClinVar_missense_all_filtered.csv.gz \
        ./GnomAD/GnomAD_missense.csv.gz \
-       ./Predictions/motsasi_variant_predictions.csv.gz \
-       ./UniProt/uniprot_sprot_h.xml.gz
+       ./Predictions/motsasi_variant_predictions.csv.gz
 ```
 
 ---
