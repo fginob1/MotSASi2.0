@@ -116,6 +116,7 @@ wget -O "uniprot_sprot.fasta.gz" https://ftp.uniprot.org/pub/databases/uniprot/c
 zcat uniprot_sprot.fasta.gz | bgzip > uniprot_sprot.fasta.bgz
 wget -O "uniprot_trembl.fasta.gz" https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_trembl.fasta.gz
 zcat uniprot_trembl.fasta.gz | bgzip > uniprot_trembl.fasta.bgz
+wget -O uniprot_sprot.list "https://rest.uniprot.org/uniprotkb/stream?format=list&query=%28*%29+AND+%28reviewed%3Atrue%29"
 cd ..
 ```
 
