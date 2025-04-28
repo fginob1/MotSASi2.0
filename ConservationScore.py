@@ -48,7 +48,7 @@ def get_bitscores_list(match, orthologous_seq, M_length, cwd_path, tmp_path):
     os.system(f"mafft --quiet {tmp_path}archivo_seqs_{match.UniProtID}.fasta > {tmp_path}mafft_{match.UniProtID}.fasta")
     # run the algorithm to generate conservation bitscores for the match motif residues, 
     # output is a tsv file that we parse as a pandas dataframe
-    os.system(f"python3 {cwd_path}Motsasi_jsdiv_cluster.py {match.UniProtID} {tmp_path}")
+    os.system(f"python3 {cwd_path}Motsasi_jsdiv.py {match.UniProtID} {tmp_path}")
     js = pd.read_csv(f"{tmp_path}Conservacion_jsdiv_{match.UniProtID}.tsv", header=0, sep="\t", index_col="Residue_number")
     # generate a np.nan list with equal length from that of the motif
     lista_aux = [np.nan]*M_length
