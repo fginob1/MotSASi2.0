@@ -59,7 +59,7 @@ def pred_est_sec_x_residuo(ctrl_positivo, fasta_tmp_file, seq, UniProtID, sec_st
     filename = f"{tmp_path}chain_only_aux_{ctrl_positivo.UniProtID}.pdb"
     structure = p.get_structure(structure_id, filename)
     array = strucio.load_structure(filename)
-    sse = struc.annotate_sse(array, chain_id="A")
+    sse = struc.annotate_sse(array)
 
     # lists with dssp numerations, residues and secondary structure motif secstr_motifs, respectively
     residue_number = [n+1 for n, aa in enumerate(seq)]
