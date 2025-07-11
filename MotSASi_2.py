@@ -338,7 +338,7 @@ def P_B(motif_label, motif_name, motif_re, true_positives, positives, clinvar_db
 
     return P_Variants, B_Variants, FinalMatrix, source, true_positives
 
-def iteration_filter(motif_name, motif_label, motif_re, iteration, screening_proteoma, true_positives, positives, negatives, remaining, Conservation_cutoff, SecStr_dict_cutoff, ExpBur_dict_cutoff, MinPos_cutoff, MaxPos_cutoff, top_GOTerms, clinvar_db_path, gnomad_db_path, uniref90_db_path, proteoma_list_path, sp_list_path, sp_fasta_path, trembl_fasta_path, tmp_path, pdbs_reparados_path, pdb_db_path, xml_db_path, sec_str_path, GO_db_path, sasa_thr_path, alphafold_human_path, scratch_path, cwd_path, plotting_dict, screen = False):
+def iteration_filter(motif_name, motif_label, motif_re, iteration, screening_proteoma, true_positives, positives, negatives, remaining, Conservation_cutoff, SecStr_dict_cutoff, ExpBur_dict_cutoff, top_GOTerms, clinvar_db_path, gnomad_db_path, uniref90_db_path, proteoma_list_path, sp_list_path, sp_fasta_path, trembl_fasta_path, tmp_path, pdbs_reparados_path, pdb_db_path, xml_db_path, sec_str_path, GO_db_path, sasa_thr_path, alphafold_human_path, scratch_path, cwd_path, plotting_dict, screen = False):
     """
     This function commands each iteration step, taking as input the remaining, positives and negatives matches
     from the previous iteration step and making the corresponding decisions to reorganize the MotSASi universe
@@ -507,7 +507,7 @@ def iteration_filter(motif_name, motif_label, motif_re, iteration, screening_pro
 
         # we iterate through candidates and evaluate them for each filter
         with Pool() as pool:
-            output_candidates = pool.starmap(motsasi_filters, zip(candidates, repeat(motif_label), repeat(motif_name), repeat(uniref90_db_path), repeat(sp_list_path), repeat(sp_fasta_path), repeat(trembl_fasta_path), repeat(xml_db_path), repeat(sec_str_path), repeat(alphafold_human_path), repeat(scratch_path), repeat(sasa_thr_path), repeat(GO_db_path), repeat(Conservation_cutoff), repeat(SecStr_dict_cutoff), repeat(ExpBur_dict_cutoff), repeat(MinPos_cutoff), repeat(MaxPos_cutoff), repeat(top_GOTerms), repeat(cwd_path), repeat(tmp_path)))
+            output_candidates = pool.starmap(motsasi_filters, zip(candidates, repeat(motif_label), repeat(motif_name), repeat(uniref90_db_path), repeat(sp_list_path), repeat(sp_fasta_path), repeat(trembl_fasta_path), repeat(xml_db_path), repeat(sec_str_path), repeat(alphafold_human_path), repeat(scratch_path), repeat(sasa_thr_path), repeat(GO_db_path), repeat(Conservation_cutoff), repeat(SecStr_dict_cutoff), repeat(ExpBur_dict_cutoff), repeat(top_GOTerms), repeat(cwd_path), repeat(tmp_path)))
 
         for i in range(len(remaining)):
             for candidate in output_candidates:
@@ -524,7 +524,6 @@ def iteration_filter(motif_name, motif_label, motif_re, iteration, screening_pro
         FinalCand_Number = len([match for match in remaining if match.MotSASi_Positive == True and \
                     match.passed_conservation == True and \
                     match.passed_secondary_structure == True and \
-                    match.passed_relative_position == True and \
                     match.passed_GOTerms == True and \
                     match.passed_exposure == True])
 
@@ -532,7 +531,6 @@ def iteration_filter(motif_name, motif_label, motif_re, iteration, screening_pro
         positives += [match for match in remaining if match.MotSASi_Positive == True and \
                     match.passed_conservation == True and \
                     match.passed_secondary_structure == True and \
-                    match.passed_relative_position == True and \
                     match.passed_GOTerms == True and \
                     match.passed_exposure == True]
 
@@ -541,7 +539,6 @@ def iteration_filter(motif_name, motif_label, motif_re, iteration, screening_pro
             if match.MotSASi_Positive == True and \
                     (match.passed_conservation == False or \
                     match.passed_secondary_structure == False or \
-                    match.passed_relative_position == False or \
                     match.passed_GOTerms == False or \
                     match.passed_exposure == False):
                 match.revert_MotSASi_verdict()
@@ -694,7 +691,7 @@ def iteration_filter(motif_name, motif_label, motif_re, iteration, screening_pro
 
     return true_positives, positives, negatives, remaining, plotting_dict, motif_statistics, FinalMatrix
 
-def motsasi_filters(candidate, motif_label, motif_name, uniref90_db_path, sp_list_path, sp_fasta_path, trembl_fasta_path, xml_db_path, sec_str_path, alphafold_human_path, scratch_path, sasa_thr_path, GO_db_path, Conservation_cutoff, SecStr_dict_cutoff, ExpBur_dict_cutoff, MinPos_cutoff, MaxPos_cutoff, top_GOTerms, cwd_path, tmp_path):
+def motsasi_filters(candidate, motif_label, motif_name, uniref90_db_path, sp_list_path, sp_fasta_path, trembl_fasta_path, xml_db_path, sec_str_path, alphafold_human_path, scratch_path, sasa_thr_path, GO_db_path, Conservation_cutoff, SecStr_dict_cutoff, ExpBur_dict_cutoff, top_GOTerms, cwd_path, tmp_path):
 
     # Conservation filter
     try:
@@ -755,13 +752,6 @@ def motsasi_filters(candidate, motif_label, motif_name, uniref90_db_path, sp_lis
         with open(f"{cwd_path}Motifs/{motif_name}/Missings_ExpBur.txt", "a") as output:
             output.write(f"{candidate.UniProtID}\n")
             output.close()
-
-    # Relative Position filter
-#     Cand_RelPos = ((candidate.start + candidate.end)//2)/candidate.length
-#     if MinPos_cutoff <= Cand_RelPos <= MaxPos_cutoff:
-    candidate.relative_position_label(True)
-#     else:
-#         candidate.relative_position_label(False)
 
     # GO Terms filter
     try:
@@ -1094,17 +1084,16 @@ def iteration_process(motif_name, motif_re, motif_label, clinvar_db_path, gnomad
     SecStr_dict_cutoff = SecStrCutOff(true_positives, motif_name, motif_label, xml_db_path, sec_str_path, alphafold_human_path, scratch_path, cwd_path, tmp_path, screen)
     top_GOTerms = GOTermsCutOff(true_positives, motif_name, xml_db_path, GO_db_path, cwd_path, screen)
     ExpBur_dict_cutoff = ExpBurCutOff(true_positives, motif_name, motif_label, xml_db_path, alphafold_human_path, sasa_thr_path, cwd_path, tmp_path, screen)
-    print(ExpBur_dict_cutoff)
 
     # rigid iteration
-    true_positives, positives, negatives, remaining, plotting_dict, motif_statistics, FinalMatrix = iteration_filter(motif_name, motif_label, motif_re, "rigid", screening_proteoma, true_positives, positives, negatives, remaining, Conservation_cutoff, SecStr_dict_cutoff, ExpBur_dict_cutoff, MinPos_cutoff, MaxPos_cutoff, top_GOTerms, clinvar_db_path, gnomad_db_path, uniref90_db_path, proteoma_list_path, sp_list_path, sp_fasta_path, trembl_fasta_path, tmp_path, pdbs_reparados_path, pdb_db_path, xml_db_path, sec_str_path, GO_db_path, sasa_thr_path, alphafold_human_path, scratch_path, cwd_path, plotting_dict, screen = screen)
+    true_positives, positives, negatives, remaining, plotting_dict, motif_statistics, FinalMatrix = iteration_filter(motif_name, motif_label, motif_re, "rigid", screening_proteoma, true_positives, positives, negatives, remaining, Conservation_cutoff, SecStr_dict_cutoff, ExpBur_dict_cutoff, top_GOTerms, clinvar_db_path, gnomad_db_path, uniref90_db_path, proteoma_list_path, sp_list_path, sp_fasta_path, trembl_fasta_path, tmp_path, pdbs_reparados_path, pdb_db_path, xml_db_path, sec_str_path, GO_db_path, sasa_thr_path, alphafold_human_path, scratch_path, cwd_path, plotting_dict, screen = screen)
     print(f"{str(len(positives))} motifs in P1f")
     print(f"{str(len(negatives))} motifs in N1f")
     print(f"{str(len(remaining))} motifs in R1f")
     print(plotting_dict)
 
     # foldx iteration
-    true_positives, positives, negatives, remaining, plotting_dict, motif_statistics, FinalMatrix = iteration_filter(motif_name, motif_label, motif_re, "foldx", screening_proteoma, true_positives, positives, negatives, remaining, Conservation_cutoff, SecStr_dict_cutoff, ExpBur_dict_cutoff, MinPos_cutoff, MaxPos_cutoff, top_GOTerms, clinvar_db_path, gnomad_db_path, uniref90_db_path, proteoma_list_path, sp_list_path, sp_fasta_path, trembl_fasta_path, tmp_path, pdbs_reparados_path, pdb_db_path, xml_db_path, sec_str_path, GO_db_path, sasa_thr_path, alphafold_human_path, scratch_path, cwd_path, plotting_dict, screen = screen)
+    true_positives, positives, negatives, remaining, plotting_dict, motif_statistics, FinalMatrix = iteration_filter(motif_name, motif_label, motif_re, "foldx", screening_proteoma, true_positives, positives, negatives, remaining, Conservation_cutoff, SecStr_dict_cutoff, ExpBur_dict_cutoff, top_GOTerms, clinvar_db_path, gnomad_db_path, uniref90_db_path, proteoma_list_path, sp_list_path, sp_fasta_path, trembl_fasta_path, tmp_path, pdbs_reparados_path, pdb_db_path, xml_db_path, sec_str_path, GO_db_path, sasa_thr_path, alphafold_human_path, scratch_path, cwd_path, plotting_dict, screen = screen)
     if not isinstance(FinalMatrix, pd.DataFrame):
         print("Stability matrices not available, review AF2 output")
         motif_statistics = {"Motif": motif_name, "True_Positives": "No_AF2", "False_Negatives": "No_AF2", 
@@ -1139,7 +1128,7 @@ def iteration_process(motif_name, motif_re, motif_label, clinvar_db_path, gnomad
     print(plotting_dict)
 
     # flexible iteration
-    true_positives, positives, negatives, remaining, plotting_dict, motif_statistics, FinalMatrix = iteration_filter(motif_name, motif_label, motif_re, "flexible", screening_proteoma, true_positives, positives, negatives, remaining, Conservation_cutoff, SecStr_dict_cutoff, ExpBur_dict_cutoff, MinPos_cutoff, MaxPos_cutoff, top_GOTerms, clinvar_db_path, gnomad_db_path, uniref90_db_path, proteoma_list_path, sp_list_path, sp_fasta_path, trembl_fasta_path, tmp_path, pdbs_reparados_path, pdb_db_path, xml_db_path, sec_str_path, GO_db_path, sasa_thr_path, alphafold_human_path, scratch_path, cwd_path, plotting_dict, screen = screen)
+    true_positives, positives, negatives, remaining, plotting_dict, motif_statistics, FinalMatrix = iteration_filter(motif_name, motif_label, motif_re, "flexible", screening_proteoma, true_positives, positives, negatives, remaining, Conservation_cutoff, SecStr_dict_cutoff, ExpBur_dict_cutoff, top_GOTerms, clinvar_db_path, gnomad_db_path, uniref90_db_path, proteoma_list_path, sp_list_path, sp_fasta_path, trembl_fasta_path, tmp_path, pdbs_reparados_path, pdb_db_path, xml_db_path, sec_str_path, GO_db_path, sasa_thr_path, alphafold_human_path, scratch_path, cwd_path, plotting_dict, screen = screen)
     print(f"{str(len(positives))} motifs in P3f")
     print(f"{str(len(negatives))} motifs in N3f")
     print(f"{str(len(remaining))} motifs in R3f")
