@@ -47,7 +47,6 @@ class motif_object(object):
         self.passed_matrix = None
         self.passed_conservation = None
         self.passed_secondary_structure = None
-        self.passed_relative_position = None
         self.passed_GOTerms = None
         self.passed_exposure = None
         self.Variants = []
@@ -77,9 +76,6 @@ class motif_object(object):
 
     def secondary_structure_label(self, label):
         self.passed_secondary_structure = label
-
-    def relative_position_label(self, label):
-        self.passed_relative_position = label
 
     def GOTerms_label(self, label):
         self.passed_GOTerms = label
