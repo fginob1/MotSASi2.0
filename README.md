@@ -129,8 +129,17 @@ To extract the necessary `.gz` files, run the following command:
 
 ```bash
 gunzip ./ClinVar/ClinVar_missense_all_filtered.csv.gz \
+       ./ClinVar/clinvar_mix.csv.gz \
        ./GnomAD/GnomAD_missense.csv.gz \
        ./Predictions/motsasi_variant_predictions.csv.gz
+```
+
+### **Generate Allele Frequency Thresholds file**
+
+To generate the corresponding file in agreement to your recently downloaded UniProt database, run the following command:
+
+```bash
+python3 FrequencyCutOff.py
 ```
 
 ---
