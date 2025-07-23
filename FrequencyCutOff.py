@@ -167,4 +167,4 @@ if __name__ == "__main__":
         cut_off = pool.starmap(cut_off_freq, zip(lista_proteoma_sp, repeat(xml_db_path), repeat(sp_h_genes_primary_name_path), repeat(cv_her_af_path)))
 
     df = pd.DataFrame(cut_off, columns=["UniProtID", "Freq_cut_off"])
-    df.to_csv("./UniProt/uniprot_genes_freq_cutoffs.csv", index=False)
+    df.to_csv("./GnomAD/uniprot_genes_freq_cutoffs.csv", index=False)
